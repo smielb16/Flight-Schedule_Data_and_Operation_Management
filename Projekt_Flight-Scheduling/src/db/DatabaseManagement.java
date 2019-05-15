@@ -58,11 +58,11 @@ public class DatabaseManagement {
                 + "("
                 + "FLIGHT_TYPE character varying NOT NULL PRIMARY KEY,"
                 + "AIRPORT character varying NOT NULL,"
-                + "START_TIME character varying NOT NULL"
-                + "FLIGHT_TIME character varying NOT NULL"
-                + "DELAY integer"
-                + "ARRIVAL_TIME character varying"
-                + "MACHINE_TYPE character varying NOT NULL"
+                + "START_TIME character varying NOT NULL,"
+                + "FLIGHT_TIME character varying NOT NULL,"
+                + "DELAY integer,"
+                + "ARRIVAL_TIME character varying,"
+                + "MACHINE_TYPE character varying NOT NULL,"
                 + "AIRLINE character varying NOT NULL"
                 + ")";
         
