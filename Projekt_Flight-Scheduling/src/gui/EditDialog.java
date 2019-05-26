@@ -5,6 +5,8 @@
  */
 package gui;
 
+import bl.DTFPattern;
+import static bl.DTFPattern.MAINPATTERN;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
@@ -13,7 +15,7 @@ import javax.swing.JOptionPane;
  *
  * @author elisc
  */
-public class EditDialog extends javax.swing.JDialog {
+public class EditDialog extends javax.swing.JDialog implements DTFPattern{
 
     private boolean success = false;
     private LocalTime delay;
@@ -83,7 +85,7 @@ public class EditDialog extends javax.swing.JDialog {
 
     private void btOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOkActionPerformed
         try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(MAINPATTERN);
             delay = LocalTime.parse(txDelay.getText(), dtf);
             
             success = true;

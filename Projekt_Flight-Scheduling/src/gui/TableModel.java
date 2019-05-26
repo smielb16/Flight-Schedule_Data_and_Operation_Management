@@ -28,6 +28,7 @@ public class TableModel extends AbstractTableModel {
     
     public void setEntries(ArrayList<FlightEntry> entries){
         this.entries = entries;
+        fireTableDataChanged();
     }
 
     @Override
@@ -53,8 +54,8 @@ public class TableModel extends AbstractTableModel {
     
     public void edit(int selRow, LocalTime delay){
         FlightEntry entry = entries.get(selRow);
-        entry.setDelay(delay);
         entries.remove(selRow);
+        entry.setDelay(delay);
         entries.add(selRow, entry);
         fireTableDataChanged();
     }

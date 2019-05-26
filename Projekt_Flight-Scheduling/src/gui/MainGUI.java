@@ -5,10 +5,16 @@
  */
 package gui;
 
+import bl.DTFPattern;
 import bl.FlightEntry;
+import bl.FlightType;
 import db.DatabaseManagement;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -18,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author elisc
  */
-public class MainGUI extends javax.swing.JFrame {
+public class MainGUI extends javax.swing.JFrame implements DTFPattern{
 
     private DatabaseManagement bl;
     private TableModel model = new TableModel();
@@ -158,6 +164,37 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btEditDelayActionPerformed
 
     private void btLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoadActionPerformed
+        try {         
+            bl.createTableSchedule();
+            model.setEntries(new ArrayList<FlightEntry>());
+            
+            BufferedReader br = new BufferedReader(new FileReader(new File("./schedule.csv")));
+            
+            String line = null;
+            
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(MAINPATTERN);
+            
+            while((line = br.readLine()) != null){
+                String[] values = line.split(";");
+                
+                FlightEntry entry = new FlightEntry(
+                    Enum.valueOf(FlightType.class, values[0]),
+                    values[1],
+                    LocalTime.parse(values[2], dtf),
+                    LocalTime.parse(values[3], dtf),
+                    values[6],
+                    values[7],
+                    values[8]
+                );
+                
+                entry.setDelay(LocalTime.parse(values[4], dtf));
+                
+                bl.addEntry(entry);
+                model.add(entry);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }//GEN-LAST:event_btLoadActionPerformed
 
@@ -165,30 +202,31 @@ public class MainGUI extends javax.swing.JFrame {
         try {
             ArrayList<FlightEntry> entries = bl.getData();
             
-            FileWriter fw = new FileWriter(new File("./schedule.csv"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./schedule.csv")));
             
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(MAINPATTERN);
             
             for (FlightEntry entry : entries) {
-                fw.write(entry.getType().toString());
-                fw.write(";");
-                fw.write(entry.getAirport());
-                fw.write(";");
-                fw.write(entry.getStartTime().format(dtf));
-                fw.write(";");
-                fw.write(entry.getFlightTime().format(dtf));
-                fw.write(";");
-                fw.write(entry.getDelay().format(dtf));
-                fw.write(";");
-                fw.write(entry.calcArrival().format(dtf));
-                fw.write(";");
-                fw.write(entry.getMachineType());
-                fw.write(";");
-                fw.write(entry.getAirline());
-                fw.write(";");
-                fw.write(entry.getFlightCode());
-                fw.write("\n");
+                bw.write(entry.getType().toString());
+                bw.write(";");
+                bw.write(entry.getAirport());
+                bw.write(";");
+                bw.write(entry.getStartTime().format(dtf));
+                bw.write(";");
+                bw.write(entry.getFlightTime().format(dtf));
+                bw.write(";");
+                bw.write(entry.getDelay().format(dtf));
+                bw.write(";");
+                bw.write(entry.calcArrival().format(dtf));
+                bw.write(";");
+                bw.write(entry.getMachineType());
+                bw.write(";");
+                bw.write(entry.getAirline());
+                bw.write(";");
+                bw.write(entry.getFlightCode());
+                bw.write("\n");
             }
+            bw.flush();
         } catch (Exception ex) {
             Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
         }

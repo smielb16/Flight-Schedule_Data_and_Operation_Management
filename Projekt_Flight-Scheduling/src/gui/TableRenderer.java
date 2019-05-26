@@ -5,6 +5,7 @@
  */
 package gui;
 
+import bl.DTFPattern;
 import bl.FlightEntry;
 import java.awt.Color;
 import java.awt.Component;
@@ -18,7 +19,7 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author elisc
  */
-public class TableRenderer implements TableCellRenderer{
+public class TableRenderer implements TableCellRenderer, DTFPattern{
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -26,7 +27,7 @@ public class TableRenderer implements TableCellRenderer{
         
         FlightEntry entry = (FlightEntry) value;
         
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(MAINPATTERN);
         
         switch(table.convertColumnIndexToModel(column)){
             case 0:

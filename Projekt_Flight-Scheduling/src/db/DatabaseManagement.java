@@ -5,6 +5,7 @@
  */
 package db;
 
+import bl.DTFPattern;
 import bl.FlightEntry;
 import bl.FlightType;
 import java.sql.Connection;
@@ -24,7 +25,7 @@ import java.util.logging.Logger;
  *
  * @author elisc
  */
-public class DatabaseManagement {
+public class DatabaseManagement implements DTFPattern{
 
     /**
      * the one and only instance of the database class
@@ -82,7 +83,7 @@ public class DatabaseManagement {
     }
 
     public void addEntry(FlightEntry entry) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(MAINPATTERN);
 
         String[] values = new String[9];
 
@@ -111,19 +112,23 @@ public class DatabaseManagement {
     }
 
     public void editEntry(FlightEntry entry) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(MAINPATTERN);
         try {
-            String sql = "DELETE FROM Schedule WHERE flight_code=?";
+            String sql = "UPDATE Schedule"
+                    + "SET delay=?, arrival_time=?"
+                    + "WHERE flight_code=?";
 
             PreparedStatement stat = conn.prepareStatement(sql);
-            stat.setString(1, entry.getFlightCode());
+            stat.setString(1, entry.getDelay().format(dtf));
+            stat.setString(2, entry.calcArrival().format(dtf));
+            stat.setString(3, entry.getFlightCode());
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        addEntry(entry);
     }
 
     /**
-     * Queries the whole table; unused*
+     * Queries the whole table*
      */
     public ArrayList<FlightEntry> getData() throws SQLException {
         String sql = "SELECT * FROM Schedule";
@@ -131,7 +136,7 @@ public class DatabaseManagement {
 
         ResultSet rs = ps.executeQuery();
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(MAINPATTERN);
 
         ArrayList<FlightEntry> entries = new ArrayList<>();
 
@@ -146,6 +151,8 @@ public class DatabaseManagement {
                     rs.getString(9)
             );
 
+            entry.setDelay(LocalTime.parse(rs.getString(5), dtf));
+            
             entries.add(entry);
         }
 

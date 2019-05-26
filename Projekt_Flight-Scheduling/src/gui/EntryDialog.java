@@ -5,6 +5,8 @@
  */
 package gui;
 
+import bl.DTFPattern;
+import static bl.DTFPattern.MAINPATTERN;
 import bl.FlightEntry;
 import bl.FlightType;
 import db.DatabaseManagement;
@@ -17,7 +19,7 @@ import javax.swing.JOptionPane;
  *
  * @author elisc
  */
-public class EntryDialog extends javax.swing.JDialog {
+public class EntryDialog extends javax.swing.JDialog implements DTFPattern {
 
     boolean success = false;
     FlightEntry entry = null;
@@ -183,7 +185,7 @@ public class EntryDialog extends javax.swing.JDialog {
             String machineType = txMachineType.getText();
             String flightCode = txFlightCode.getText();
 
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(MAINPATTERN);
             LocalTime startTime = LocalTime.parse(txStartTime.getText(), dtf);
             LocalTime flightTime = LocalTime.parse(txFlightTime.getText(), dtf);
 
