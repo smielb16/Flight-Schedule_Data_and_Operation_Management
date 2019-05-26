@@ -13,7 +13,8 @@ import db.DatabaseManagement;
  */
 public class MainGUI extends javax.swing.JFrame {
 
-    DatabaseManagement bl;
+    private DatabaseManagement bl;
+    private TableModel model = new TableModel();
 
     /**
      * Creates new form MainGUI
@@ -26,6 +27,9 @@ public class MainGUI extends javax.swing.JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        
+        tbMain.setModel(model);
+        tbMain.setDefaultRenderer(Object.class, new TableRenderer());
     }
 
     /**
@@ -38,14 +42,14 @@ public class MainGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbMain = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         btAddEntry = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbMain.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -56,7 +60,7 @@ public class MainGUI extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tbMain);
 
         jMenu1.setText("File");
 
@@ -94,6 +98,7 @@ public class MainGUI extends javax.swing.JFrame {
         dialog.setVisible(true);
         if (dialog.isSuccess()) {
             bl.addEntry(dialog.getEntry());
+            model.add(dialog.getEntry());
         }
     }//GEN-LAST:event_btAddEntryActionPerformed
 
@@ -137,6 +142,6 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tbMain;
     // End of variables declaration//GEN-END:variables
 }

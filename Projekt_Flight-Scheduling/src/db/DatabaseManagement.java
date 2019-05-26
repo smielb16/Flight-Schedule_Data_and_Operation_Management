@@ -6,15 +6,16 @@
 package db;
 
 import bl.FlightEntry;
+import bl.FlightType;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 
 /**
  *
@@ -27,15 +28,17 @@ public class DatabaseManagement {
      */
     private static DatabaseManagement instance;
     private final Connection conn;
+    private ArrayList<FlightEntry> entries;
 
     /**
      * Constructor is private Singleton implementation
      */
     private DatabaseManagement() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:postgresql://localhost/flight_scheduling",
-                "postgres", "postgres");
-    }
-
+        conn = DriverManager.getConnection(
+                "jdbc:postgresql://localhost/flight_scheduling",
+                "postgres", "postgres"
+        );
+    }   
 
     /**
      * If the instance hasn't been created before, it gets created.
@@ -78,7 +81,7 @@ public class DatabaseManagement {
         values[2] = entry.getStartTime().format(dtf);
         values[3] = entry.getFlightTime().format(dtf);
         values[4] = "0";
-        values[5] = entry.calcArrival(0, 0);
+        values[5] = entry.calcArrival().format(dtf);
         values[6] = entry.getMachineType();
         values[7] = entry.getAirline();
         values[8] = entry.getFlightCode();
@@ -95,6 +98,35 @@ public class DatabaseManagement {
         } catch (Exception ex) {
             //ex.printStackTrace();
         }
+    }
+    
+    
+    /**Queries the whole table**/
+    public ArrayList<FlightEntry> getData() throws SQLException{
+        String sql = "SELECT * FROM Schedule";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        
+        ResultSet rs = ps.executeQuery();
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        
+        ArrayList<FlightEntry> entries = new ArrayList<>();
+        
+        while(rs.next()){
+            FlightEntry entry = new FlightEntry(
+                    Enum.valueOf(FlightType.class, rs.getString(1)),
+                    rs.getString(2),
+                    LocalTime.parse(rs.getString(3), dtf),
+                    LocalTime.parse(rs.getString(4), dtf),
+                    rs.getString(7),
+                    rs.getString(8),
+                    rs.getString(9)
+            );
+            
+            entries.add(entry);
+        }
+        
+        return entries;
     }
 
     public boolean checkDbForEntry(String flightcode){

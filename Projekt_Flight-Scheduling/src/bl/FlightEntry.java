@@ -21,6 +21,7 @@ public class FlightEntry {
     private String machineType;
     private String airline;
     private String flightCode;
+    private LocalTime delay;
     
     public FlightEntry(FlightType type, String airport, LocalTime startTime,
             LocalTime flightTime, String machineType,
@@ -33,17 +34,17 @@ public class FlightEntry {
         this.machineType = machineType;
         this.airline = airline;
         this.flightCode = flightCode;
+        this.delay = LocalTime.of(0, 0);
         
     }
     
-    public String calcArrival(int hours, int minutes){
+    public LocalTime calcArrival(){
         LocalTime arrival = startTime.plusHours(flightTime.getHour());
         arrival = arrival.plusMinutes(flightTime.getMinute());
-        arrival = arrival.plusHours(hours);
-        arrival = arrival.plusMinutes(minutes);
+        arrival = arrival.plusHours(delay.getHour());
+        arrival = arrival.plusMinutes(delay.getMinute());
         
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-        return arrival.format(dtf);
+        return arrival;
     }
 
     public String getFlightCode() {
@@ -72,6 +73,14 @@ public class FlightEntry {
 
     public String getAirline() {
         return airline;
+    }
+    
+    public void setDelay(LocalTime delay){
+        this.delay = delay;
+    }
+    
+    public LocalTime getDelay(){
+        return delay;
     }
     
 }
