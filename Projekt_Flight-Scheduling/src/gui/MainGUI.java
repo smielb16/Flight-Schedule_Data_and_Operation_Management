@@ -5,7 +5,7 @@
  */
 package gui;
 
-import bl.DataBL;
+import db.DatabaseManagement;
 
 /**
  *
@@ -13,14 +13,18 @@ import bl.DataBL;
  */
 public class MainGUI extends javax.swing.JFrame {
 
-    DataBL bl = new DataBL();
-    
+    DatabaseManagement bl;
+
     /**
      * Creates new form MainGUI
      */
     public MainGUI() {
         initComponents();
-        
+        try {
+            bl = DatabaseManagement.getInstance();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -85,9 +89,9 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void btAddEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddEntryActionPerformed
         EntryDialog dialog = new EntryDialog(this, true);
-        
+
         dialog.setVisible(true);
-        if(dialog.isSuccess()){
+        if (dialog.isSuccess()) {
             bl.addEntry(dialog.getEntry());
         }
     }//GEN-LAST:event_btAddEntryActionPerformed

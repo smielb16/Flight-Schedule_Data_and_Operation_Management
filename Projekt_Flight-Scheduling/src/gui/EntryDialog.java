@@ -7,6 +7,9 @@ package gui;
 
 import bl.FlightEntry;
 import bl.FlightType;
+import bl.ScheduledFlightException;
+import db.DatabaseManagement;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
@@ -19,13 +22,14 @@ public class EntryDialog extends javax.swing.JDialog {
 
     boolean success = false;
     FlightEntry entry = null;
+    DatabaseManagement bl;
 
-    public void initCbFlightType(){
-        for(FlightType type : FlightType.values()){
+    public void initCbFlightType() {
+        for (FlightType type : FlightType.values()) {
             cbFlightType.addItem(type);
         }
     }
-    
+
     public boolean isSuccess() {
         return success;
     }
@@ -33,9 +37,7 @@ public class EntryDialog extends javax.swing.JDialog {
     public FlightEntry getEntry() {
         return entry;
     }
-    
-    
-    
+
     /**
      * Creates new form EntryDialog
      */
@@ -43,6 +45,12 @@ public class EntryDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         initCbFlightType();
+
+        try {
+            bl = DatabaseManagement.getInstance();
+        } catch (Exception ex) {
+
+        }
     }
 
     /**
@@ -67,11 +75,14 @@ public class EntryDialog extends javax.swing.JDialog {
         txMachineType = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txAirline = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txFlightCode = new javax.swing.JTextField();
         btOk = new javax.swing.JButton();
+        btAbort = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setLayout(new java.awt.GridLayout(6, 2));
+        jPanel1.setLayout(new java.awt.GridLayout(7, 2));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -110,6 +121,12 @@ public class EntryDialog extends javax.swing.JDialog {
         jPanel1.add(jLabel3);
         jPanel1.add(txAirline);
 
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("Flight code");
+        jPanel1.add(jLabel7);
+        jPanel1.add(txFlightCode);
+
         btOk.setText("OK");
         btOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -117,12 +134,20 @@ public class EntryDialog extends javax.swing.JDialog {
             }
         });
 
+        btAbort.setText("Abort");
+        btAbort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAbortActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(btAbort, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btOk, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
         );
@@ -131,33 +156,44 @@ public class EntryDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btOk, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btOk, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                    .addComponent(btAbort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOkActionPerformed
-        try{
+        try {
             String airline = txAirline.getText();
-            String flighttype = cbFlightType.getSelectedItem().toString();
+            FlightType flighttype = (FlightType) cbFlightType.getSelectedItem();
             String airport = txAirport.getText();
             String machineType = txMachineType.getText();
-            
+            String flightCode = txFlightCode.getText();
+
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
             LocalTime startTime = LocalTime.parse(txStartTime.getText(), dtf);
             LocalTime flightTime = LocalTime.parse(txFlightTime.getText(), dtf);
-            
+
+            bl.checkDbForEntry(flightCode);
+
             entry = new FlightEntry(flighttype, airport,
-                    startTime, flightTime, machineType, airline);
+                    startTime, flightTime, machineType, airline, flightCode);
+        } catch (SQLException sql) {
+            JOptionPane.showMessageDialog(null, "Flight already scheduled!");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null,
+                    "Data has to be valid and complete!");
         }
-        catch(Exception ex){
-            JOptionPane.showMessageDialog(null, "Data has to be valid and complete!");
-        }
-        if(bl.check())
+
         success = true;
-        this.dispose();
     }//GEN-LAST:event_btOkActionPerformed
+
+    private void btAbortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAbortActionPerformed
+        success = false;
+        this.dispose();
+    }//GEN-LAST:event_btAbortActionPerformed
 
     /**
      * @param args the command line arguments
@@ -202,6 +238,7 @@ public class EntryDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btAbort;
     private javax.swing.JButton btOk;
     private javax.swing.JComboBox<FlightType> cbFlightType;
     private javax.swing.JLabel jLabel1;
@@ -210,9 +247,11 @@ public class EntryDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField txAirline;
     private javax.swing.JTextField txAirport;
+    private javax.swing.JTextField txFlightCode;
     private javax.swing.JTextField txFlightTime;
     private javax.swing.JTextField txMachineType;
     private javax.swing.JTextField txStartTime;

@@ -9,9 +9,6 @@ package bl;
  *
  * @author elisc
  */
-public class DataBL {
+public class ScheduledFlightException extends Exception{
     
-    public void addEntry(Object o){
-        
-    }
 }
