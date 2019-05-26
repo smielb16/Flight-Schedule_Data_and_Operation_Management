@@ -81,6 +81,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txAirport">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Singapore"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
@@ -92,6 +95,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txStartTime">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="16:00"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
@@ -103,6 +109,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txFlightTime">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="08:15"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -114,6 +123,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txMachineType">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="A380-800"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
@@ -125,6 +137,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txAirline">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Quantas"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
@@ -136,6 +151,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txFlightCode">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="QFA1"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

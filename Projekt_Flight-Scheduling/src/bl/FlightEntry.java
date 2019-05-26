@@ -6,6 +6,7 @@
 package bl;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -33,6 +34,16 @@ public class FlightEntry {
         this.airline = airline;
         this.flightCode = flightCode;
         
+    }
+    
+    public String calcArrival(int hours, int minutes){
+        LocalTime arrival = startTime.plusHours(flightTime.getHour());
+        arrival = arrival.plusMinutes(flightTime.getMinute());
+        arrival = arrival.plusHours(hours);
+        arrival = arrival.plusMinutes(minutes);
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        return arrival.format(dtf);
     }
 
     public String getFlightCode() {

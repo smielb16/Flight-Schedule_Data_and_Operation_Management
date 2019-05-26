@@ -22,6 +22,7 @@ public class MainGUI extends javax.swing.JFrame {
         initComponents();
         try {
             bl = DatabaseManagement.getInstance();
+            bl.createTableSchedule();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

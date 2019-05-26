@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -34,13 +36,6 @@ public class DatabaseManagement {
                 "postgres", "postgres");
     }
 
-    public static void main(String[] args) {
-        try {
-            DatabaseManagement.getInstance().createTableSchedule();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     /**
      * If the instance hasn't been created before, it gets created.
@@ -62,7 +57,7 @@ public class DatabaseManagement {
                 + "AIRPORT character varying NOT NULL,"
                 + "START_TIME character varying NOT NULL,"
                 + "FLIGHT_TIME character varying NOT NULL,"
-                + "DELAY integer,"
+                + "DELAY character varying,"
                 + "ARRIVAL_TIME character varying,"
                 + "MACHINE_TYPE character varying NOT NULL,"
                 + "AIRLINE character varying NOT NULL,"
@@ -76,11 +71,19 @@ public class DatabaseManagement {
     public void addEntry(FlightEntry entry) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
 
-        String[] values = {entry.getType().toString(), entry.getAirport(),
-            entry.getStartTime().format(dtf), entry.getFlightTime().format(dtf),
-            entry.getMachineType(), entry.getAirline(), entry.getFlightCode()};
+        String[] values = new String[9];
 
-        String sql = "INSERT INTO Schedule VALUES(?, ?, ?, ?, ?, ?, ?)";
+        values[0] = entry.getType().toString();
+        values[1] = entry.getAirport();
+        values[2] = entry.getStartTime().format(dtf);
+        values[3] = entry.getFlightTime().format(dtf);
+        values[4] = "0";
+        values[5] = entry.calcArrival(0, 0);
+        values[6] = entry.getMachineType();
+        values[7] = entry.getAirline();
+        values[8] = entry.getFlightCode();
+
+        String sql = "INSERT INTO Schedule VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement stat = conn.prepareStatement(sql);
@@ -88,23 +91,29 @@ public class DatabaseManagement {
             for(int i = 0; i < values.length; i++){
                 stat.setString(i+1, values[i]);
             }
+            stat.executeUpdate();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 
-    public void checkDbForEntry(String flightcode) throws SQLException{
-        String sql = "SELECT * FROM Schedule WHERE flight_code = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+    public boolean checkDbForEntry(String flightcode){
+        boolean exists = false;
+        try {
+            String sql = "SELECT * FROM Schedule WHERE flight_code = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);        
+            ps.setString(1, flightcode);
+            
+            ResultSet rs = ps.executeQuery();
+            exists = rs.next();
+            
+        } catch (SQLException ex) {
+        }
+        return exists;
+    }
+    
+    public void showSchedule(){
         
-        ResultSet rs = ps.executeQuery();
     }
 
-    /*public void insertTestData() throws Exception {
-        String sql = "INSERT INTO Pet VALUES(0, 'Hundi', 'Haushund');"
-                + "INSERT INTO Pet VALUES(1, 'Katzi', 'Hauskatze');";
-        
-        Statement stat = conn.createStatement();
-        stat.executeUpdate(sql);
-    }*/
 }

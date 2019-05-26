@@ -7,9 +7,8 @@ package gui;
 
 import bl.FlightEntry;
 import bl.FlightType;
-import bl.ScheduledFlightException;
 import db.DatabaseManagement;
-import java.sql.SQLException;
+import db.ScheduledFlightException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
@@ -95,36 +94,48 @@ public class EntryDialog extends javax.swing.JDialog {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Airport");
         jPanel1.add(jLabel6);
+
+        txAirport.setText("Singapore");
         jPanel1.add(txAirport);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Start time (hh:mm)");
         jPanel1.add(jLabel4);
+
+        txStartTime.setText("16:00");
         jPanel1.add(txStartTime);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Flight time (hh:mm)");
         jPanel1.add(jLabel5);
+
+        txFlightTime.setText("08:15");
         jPanel1.add(txFlightTime);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Machine type");
         jPanel1.add(jLabel1);
+
+        txMachineType.setText("A380-800");
         jPanel1.add(txMachineType);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Airline");
         jPanel1.add(jLabel3);
+
+        txAirline.setText("Quantas");
         jPanel1.add(txAirline);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("Flight code");
         jPanel1.add(jLabel7);
+
+        txFlightCode.setText("QFA1");
         jPanel1.add(txFlightCode);
 
         btOk.setText("OK");
@@ -176,18 +187,22 @@ public class EntryDialog extends javax.swing.JDialog {
             LocalTime startTime = LocalTime.parse(txStartTime.getText(), dtf);
             LocalTime flightTime = LocalTime.parse(txFlightTime.getText(), dtf);
 
-            bl.checkDbForEntry(flightCode);
+            if (bl.checkDbForEntry(flightCode)) {
+                throw new ScheduledFlightException();
+            }
 
             entry = new FlightEntry(flighttype, airport,
                     startTime, flightTime, machineType, airline, flightCode);
-        } catch (SQLException sql) {
-            JOptionPane.showMessageDialog(null, "Flight already scheduled!");
+            
+            success = true;
+            this.dispose();
+        } catch (ScheduledFlightException sf) {
+            JOptionPane.showMessageDialog(null,
+                    "Flight already scheduled!");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null,
                     "Data has to be valid and complete!");
         }
-
-        success = true;
     }//GEN-LAST:event_btOkActionPerformed
 
     private void btAbortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAbortActionPerformed
