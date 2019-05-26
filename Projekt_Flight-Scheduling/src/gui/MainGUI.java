@@ -5,7 +5,14 @@
  */
 package gui;
 
+import bl.FlightEntry;
 import db.DatabaseManagement;
+import java.io.File;
+import java.io.FileWriter;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +30,12 @@ public class MainGUI extends javax.swing.JFrame {
         initComponents();
         try {
             bl = DatabaseManagement.getInstance();
-            bl.createTableSchedule();
+            if(bl.checkForExistingTable()){
+                model.setEntries(bl.getData());
+            }
+            else{
+                bl.createTableSchedule();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -46,6 +58,10 @@ public class MainGUI extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         btAddEntry = new javax.swing.JMenuItem();
+        btEditDelay = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        btLoad = new javax.swing.JMenuItem();
+        btSave = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,7 +78,7 @@ public class MainGUI extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tbMain);
 
-        jMenu1.setText("File");
+        jMenu1.setText("Edit");
 
         btAddEntry.setText("Add Schedule Entry");
         btAddEntry.addActionListener(new java.awt.event.ActionListener() {
@@ -72,7 +88,35 @@ public class MainGUI extends javax.swing.JFrame {
         });
         jMenu1.add(btAddEntry);
 
+        btEditDelay.setText("Edit Delay");
+        btEditDelay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEditDelayActionPerformed(evt);
+            }
+        });
+        jMenu1.add(btEditDelay);
+
         jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("File");
+
+        btLoad.setText("Load");
+        btLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLoadActionPerformed(evt);
+            }
+        });
+        jMenu2.add(btLoad);
+
+        btSave.setText("Save");
+        btSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSaveActionPerformed(evt);
+            }
+        });
+        jMenu2.add(btSave);
+
+        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -101,6 +145,54 @@ public class MainGUI extends javax.swing.JFrame {
             model.add(dialog.getEntry());
         }
     }//GEN-LAST:event_btAddEntryActionPerformed
+
+    private void btEditDelayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditDelayActionPerformed
+        EditDialog dialog = new EditDialog(this, true);
+        
+        dialog.setVisible(true);
+        if(dialog.isSuccess()){
+            int selRow = tbMain.getSelectedRow();
+            model.edit(selRow, dialog.getDelay());
+            bl.editEntry(model.getEntry(selRow));
+        }
+    }//GEN-LAST:event_btEditDelayActionPerformed
+
+    private void btLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoadActionPerformed
+        
+    }//GEN-LAST:event_btLoadActionPerformed
+
+    private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
+        try {
+            ArrayList<FlightEntry> entries = bl.getData();
+            
+            FileWriter fw = new FileWriter(new File("./schedule.csv"));
+            
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+            
+            for (FlightEntry entry : entries) {
+                fw.write(entry.getType().toString());
+                fw.write(";");
+                fw.write(entry.getAirport());
+                fw.write(";");
+                fw.write(entry.getStartTime().format(dtf));
+                fw.write(";");
+                fw.write(entry.getFlightTime().format(dtf));
+                fw.write(";");
+                fw.write(entry.getDelay().format(dtf));
+                fw.write(";");
+                fw.write(entry.calcArrival().format(dtf));
+                fw.write(";");
+                fw.write(entry.getMachineType());
+                fw.write(";");
+                fw.write(entry.getAirline());
+                fw.write(";");
+                fw.write(entry.getFlightCode());
+                fw.write("\n");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btSaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -139,7 +231,11 @@ public class MainGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem btAddEntry;
+    private javax.swing.JMenuItem btEditDelay;
+    private javax.swing.JMenuItem btLoad;
+    private javax.swing.JMenuItem btSave;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tbMain;

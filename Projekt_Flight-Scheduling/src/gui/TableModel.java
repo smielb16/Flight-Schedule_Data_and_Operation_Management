@@ -6,11 +6,8 @@
 package gui;
 
 import bl.FlightEntry;
-import db.DatabaseManagement;
-import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -27,6 +24,10 @@ public class TableModel extends AbstractTableModel {
     @Override
     public int getRowCount() {
         return entries.size();
+    }
+    
+    public void setEntries(ArrayList<FlightEntry> entries){
+        this.entries = entries;
     }
 
     @Override
@@ -48,6 +49,18 @@ public class TableModel extends AbstractTableModel {
     public void add(FlightEntry entry){
         entries.add(entry);
         fireTableRowsInserted(entries.size()-1, entries.size()-1);
+    }
+    
+    public void edit(int selRow, LocalTime delay){
+        FlightEntry entry = entries.get(selRow);
+        entry.setDelay(delay);
+        entries.remove(selRow);
+        entries.add(selRow, entry);
+        fireTableDataChanged();
+    }
+    
+    public FlightEntry getEntry(int selRow){
+        return entries.get(selRow);
     }
 
 }

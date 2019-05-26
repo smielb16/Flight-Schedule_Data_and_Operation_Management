@@ -138,7 +138,7 @@ public class EntryDialog extends javax.swing.JDialog {
         txFlightCode.setText("QFA1");
         jPanel1.add(txFlightCode);
 
-        btOk.setText("OK");
+        btOk.setText("Enter");
         btOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btOkActionPerformed(evt);

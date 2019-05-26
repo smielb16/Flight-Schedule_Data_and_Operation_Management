@@ -8,6 +8,7 @@ package db;
 import bl.FlightEntry;
 import bl.FlightType;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +17,8 @@ import java.sql.Statement;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,7 +41,7 @@ public class DatabaseManagement {
                 "jdbc:postgresql://localhost/flight_scheduling",
                 "postgres", "postgres"
         );
-    }   
+    }
 
     /**
      * If the instance hasn't been created before, it gets created.
@@ -52,9 +55,16 @@ public class DatabaseManagement {
         return instance;
     }
 
+    public boolean checkForExistingTable() throws SQLException{
+        DatabaseMetaData meta = conn.getMetaData();
+        ResultSet res = meta.getTables(null, null, "Schedule", null);
+        
+        return res.next();
+    }
+
     public void createTableSchedule() throws Exception {
         String sql = "DROP TABLE IF EXISTS Schedule;"
-                + "CREATE TABLE Schedule"
+                + "CREATE TABLE IF NOT EXISTS Schedule"
                 + "("
                 + "FLIGHT_TYPE character varying NOT NULL,"
                 + "AIRPORT character varying NOT NULL,"
@@ -80,7 +90,7 @@ public class DatabaseManagement {
         values[1] = entry.getAirport();
         values[2] = entry.getStartTime().format(dtf);
         values[3] = entry.getFlightTime().format(dtf);
-        values[4] = "0";
+        values[4] = entry.getDelay().format(dtf);
         values[5] = entry.calcArrival().format(dtf);
         values[6] = entry.getMachineType();
         values[7] = entry.getAirline();
@@ -90,29 +100,42 @@ public class DatabaseManagement {
 
         try {
             PreparedStatement stat = conn.prepareStatement(sql);
-            
-            for(int i = 0; i < values.length; i++){
-                stat.setString(i+1, values[i]);
+
+            for (int i = 0; i < values.length; i++) {
+                stat.setString(i + 1, values[i]);
             }
             stat.executeUpdate();
         } catch (Exception ex) {
             //ex.printStackTrace();
         }
     }
-    
-    
-    /**Queries the whole table**/
-    public ArrayList<FlightEntry> getData() throws SQLException{
+
+    public void editEntry(FlightEntry entry) {
+        try {
+            String sql = "DELETE FROM Schedule WHERE flight_code=?";
+
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, entry.getFlightCode());
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        addEntry(entry);
+    }
+
+    /**
+     * Queries the whole table; unused*
+     */
+    public ArrayList<FlightEntry> getData() throws SQLException {
         String sql = "SELECT * FROM Schedule";
         PreparedStatement ps = conn.prepareStatement(sql);
-        
+
         ResultSet rs = ps.executeQuery();
-        
+
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-        
+
         ArrayList<FlightEntry> entries = new ArrayList<>();
-        
-        while(rs.next()){
+
+        while (rs.next()) {
             FlightEntry entry = new FlightEntry(
                     Enum.valueOf(FlightType.class, rs.getString(1)),
                     rs.getString(2),
@@ -122,30 +145,26 @@ public class DatabaseManagement {
                     rs.getString(8),
                     rs.getString(9)
             );
-            
+
             entries.add(entry);
         }
-        
+
         return entries;
     }
 
-    public boolean checkDbForEntry(String flightcode){
+    public boolean checkDbForEntry(String flightcode) {
         boolean exists = false;
         try {
             String sql = "SELECT * FROM Schedule WHERE flight_code = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);        
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, flightcode);
-            
+
             ResultSet rs = ps.executeQuery();
             exists = rs.next();
-            
+
         } catch (SQLException ex) {
         }
         return exists;
-    }
-    
-    public void showSchedule(){
-        
     }
 
 }
