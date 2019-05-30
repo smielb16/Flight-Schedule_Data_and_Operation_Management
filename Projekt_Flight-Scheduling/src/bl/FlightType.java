@@ -6,7 +6,7 @@
 package bl;
 
 /**
- *
+ * FlightType enum to distinguish the only available to types
  * @author elisc
  */
 public enum FlightType {

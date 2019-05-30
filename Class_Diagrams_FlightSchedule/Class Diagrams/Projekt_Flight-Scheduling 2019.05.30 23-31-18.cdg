@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Projekt_Flight-Scheduling">
+  <ClassDiagramComponents>
+    <Class name="FlightEntry" package="bl" visibility="public" xPosition="829.0" yPosition="1518.0">
+      <Fields>
+        <Field name="type" type="FlightType" visibility="private"/>
+        <Field name="airport" type="String" visibility="private"/>
+        <Field name="startTime" type="LocalTime" visibility="private"/>
+        <Field name="flightTime" type="LocalTime" visibility="private"/>
+        <Field name="machineType" type="String" visibility="private"/>
+        <Field name="airline" type="String" visibility="private"/>
+        <Field name="flightCode" type="String" visibility="private"/>
+        <Field name="delay" type="LocalTime" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="FlightType" name="type"/>
+          <Argument type="String" name="airport"/>
+          <Argument type="LocalTime" name="startTime"/>
+          <Argument type="LocalTime" name="flightTime"/>
+          <Argument type="String" name="machineType"/>
+          <Argument type="String" name="airline"/>
+          <Argument type="String" name="flightCode"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="calcArrival" returnType="LocalTime" visibility="public"/>
+        <Method name="getFlightCode" returnType="String" visibility="public"/>
+        <Method name="getType" returnType="FlightType" visibility="public"/>
+        <Method name="getAirport" returnType="String" visibility="public"/>
+        <Method name="getStartTime" returnType="LocalTime" visibility="public"/>
+        <Method name="getFlightTime" returnType="LocalTime" visibility="public"/>
+        <Method name="getMachineType" returnType="String" visibility="public"/>
+        <Method name="getAirline" returnType="String" visibility="public"/>
+        <Method name="setDelay" returnType="void" visibility="public">
+          <Argument type="LocalTime" name="delay"/>
+        </Method>
+        <Method name="getDelay" returnType="LocalTime" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="DatabaseManagement" package="db" visibility="public" xPosition="1878.0" yPosition="948.0">
+      <Fields>
+        <Field name="instance" type="DatabaseManagement" visibility="private" isStatic="true"/>
+        <Field name="conn" type="Connection" visibility="private" isFinal="true"/>
+        <Field name="entries" type="ArrayList&lt;FlightEntry&gt;" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="private"/>
+      </Constructors>
+      <Methods>
+        <Method name="getInstance" returnType="DatabaseManagement" visibility="public" isStatic="true" isSynchronized="true"/>
+        <Method name="checkForExistingTable" returnType="boolean" visibility="public"/>
+        <Method name="createTableSchedule" returnType="void" visibility="public"/>
+        <Method name="addEntry" returnType="void" visibility="public">
+          <Argument type="FlightEntry" name="entry"/>
+        </Method>
+        <Method name="editEntry" returnType="void" visibility="public">
+          <Argument type="FlightEntry" name="entry"/>
+        </Method>
+        <Method name="getData" returnType="ArrayList&lt;FlightEntry&gt;" visibility="public"/>
+        <Method name="deleteEntry" returnType="void" visibility="public">
+          <Argument type="FlightEntry" name="entry"/>
+        </Method>
+        <Method name="checkDbForEntry" returnType="boolean" visibility="public">
+          <Argument type="String" name="flightcode"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="ScheduledFlightException" package="db" visibility="public" xPosition="1757.0" yPosition="711.0">
+      <Fields/>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="EditDialog" package="gui" visibility="public" xPosition="59.0" yPosition="1518.0">
+      <Fields>
+        <Field name="success" type="boolean" visibility="private"/>
+        <Field name="delay" type="LocalTime" visibility="private"/>
+        <Field name="btAbort" type="javax.swing.JButton" visibility="private"/>
+        <Field name="btOk" type="javax.swing.JButton" visibility="private"/>
+        <Field name="jLabel1" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="txDelay" type="javax.swing.JTextField" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="java.awt.Frame" name="parent"/>
+          <Argument type="boolean" name="modal"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getDelay" returnType="LocalTime" visibility="public"/>
+        <Method name="isSuccess" returnType="boolean" visibility="public"/>
+        <Method name="initComponents" returnType="// &lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;Generated Code&quot;&gt;//GEN-BEGIN:initComponents void" visibility="private"/>
+        <Method name="btAbortActionPerformed" returnType="void" visibility="private">
+          <Argument type="java.awt.event.ActionEvent" name="evt"/>
+        </Method>
+        <Method name="btOkActionPerformed" returnType="void" visibility="private">
+          <Argument type="java.awt.event.ActionEvent" name="evt"/>
+        </Method>
+        <Method name="main" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="args"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="EntryDialog" package="gui" visibility="public" xPosition="884.0" yPosition="500.0">
+      <Fields>
+        <Field name="success" type="boolean" visibility="package"/>
+        <Field name="entry" type="FlightEntry" visibility="package"/>
+        <Field name="bl" type="DatabaseManagement" visibility="package"/>
+        <Field name="btAbort" type="javax.swing.JButton" visibility="private"/>
+        <Field name="btOk" type="javax.swing.JButton" visibility="private"/>
+        <Field name="cbFlightType" type="javax.swing.JComboBox&lt;FlightType&gt;" visibility="private"/>
+        <Field name="jLabel1" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel2" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel3" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel4" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel5" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel6" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel7" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jPanel1" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="txAirline" type="javax.swing.JTextField" visibility="private"/>
+        <Field name="txAirport" type="javax.swing.JTextField" visibility="private"/>
+        <Field name="txFlightCode" type="javax.swing.JTextField" visibility="private"/>
+        <Field name="txFlightTime" type="javax.swing.JTextField" visibility="private"/>
+        <Field name="txMachineType" type="javax.swing.JTextField" visibility="private"/>
+        <Field name="txStartTime" type="javax.swing.JTextField" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="java.awt.Frame" name="parent"/>
+          <Argument type="boolean" name="modal"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="initCbFlightType" returnType="void" visibility="public"/>
+        <Method name="isSuccess" returnType="boolean" visibility="public"/>
+        <Method name="getEntry" returnType="FlightEntry" visibility="public"/>
+        <Method name="initComponents" returnType="// &lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;Generated Code&quot;&gt;//GEN-BEGIN:initComponents void" visibility="private"/>
+        <Method name="btOkActionPerformed" returnType="void" visibility="private">
+          <Argument type="java.awt.event.ActionEvent" name="evt"/>
+        </Method>
+        <Method name="btAbortActionPerformed" returnType="void" visibility="private">
+          <Argument type="java.awt.event.ActionEvent" name="evt"/>
+        </Method>
+        <Method name="main" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="args"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="MainGUI" package="gui" visibility="public" xPosition="2291.0" yPosition="794.0">
+      <Fields>
+        <Field name="bl" type="DatabaseManagement" visibility="private"/>
+        <Field name="model" type="TableModel" visibility="private"/>
+        <Field name="tbMain" type="JTable" visibility="private"/>
+        <Field name="btAddEntry" type="JMenuItem" visibility="private"/>
+        <Field name="btEditDelay" type="JMenuItem" visibility="private"/>
+        <Field name="btLoad" type="JMenuItem" visibility="private"/>
+        <Field name="btSave" type="JMenuItem" visibility="private"/>
+        <Field name="btDeleteEntries" type="JMenuItem" visibility="private"/>
+        <Field name="menu1" type="JMenu" visibility="private"/>
+        <Field name="menu2" type="JMenu" visibility="private"/>
+        <Field name="menuBar" type="JMenuBar" visibility="private"/>
+        <Field name="scrollpane" type="JScrollPane" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="main" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String[]" name="args"/>
+        </Method>
+        <Method name="init" returnType="void" visibility="private"/>
+        <Method name="initCompOld" returnType="void" visibility="private"/>
+        <Method name="methodAddEntry" returnType="void" visibility="private"/>
+        <Method name="methodEditDelay" returnType="void" visibility="private"/>
+        <Method name="methodLoad" returnType="void" visibility="private"/>
+        <Method name="methodSave" returnType="void" visibility="private"/>
+        <Method name="methodDeleteEntries" returnType="void" visibility="private"/>
+        <Method name="initComp" returnType="void" visibility="private"/>
+      </Methods>
+    </Class>
+    <Class name="TableModel" package="gui" visibility="public" xPosition="1996.0" yPosition="1615.0">
+      <Fields>
+        <Field name="entries" type="ArrayList&lt;FlightEntry&gt;" visibility="package"/>
+        <Field name="COLUMNS" type="String[]" visibility="private" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getRowCount" returnType="int" visibility="public"/>
+        <Method name="setEntries" returnType="void" visibility="public">
+          <Argument type="ArrayList&lt;FlightEntry&gt;" name="entries"/>
+        </Method>
+        <Method name="getColumnCount" returnType="int" visibility="public"/>
+        <Method name="getColumnName" returnType="String" visibility="public">
+          <Argument type="int" name="column"/>
+        </Method>
+        <Method name="getValueAt" returnType="Object" visibility="public">
+          <Argument type="int" name="rowIndex"/>
+          <Argument type="int" name="columnIndex"/>
+        </Method>
+        <Method name="add" returnType="void" visibility="public">
+          <Argument type="FlightEntry" name="entry"/>
+        </Method>
+        <Method name="edit" returnType="void" visibility="public">
+          <Argument type="int" name="selRow"/>
+          <Argument type="LocalTime" name="delay"/>
+        </Method>
+        <Method name="delete" returnType="void" visibility="public">
+          <Argument type="int[]" name="indices"/>
+        </Method>
+        <Method name="getEntry" returnType="FlightEntry" visibility="public">
+          <Argument type="int" name="selRow"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="TableRenderer" package="gui" visibility="public" xPosition="45.0" yPosition="657.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="getTableCellRendererComponent" returnType="Component" visibility="public">
+          <Argument type="JTable" name="table"/>
+          <Argument type="Object" name="value"/>
+          <Argument type="boolean" name="isSelected"/>
+          <Argument type="boolean" name="hasFocus"/>
+          <Argument type="int" name="row"/>
+          <Argument type="int" name="column"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Interface name="DTFPattern" package="bl" visibility="public" xPosition="208.0" yPosition="1358.0">
+      <Methods/>
+    </Interface>
+    <Enum name="FlightType" package="bl" visibility="public" xPosition="1859.0" yPosition="1339.0">
+      <Literals>
+        <Literal name="ARRIVAL"/>
+        <Literal name="DEPARTURE"/>
+      </Literals>
+    </Enum>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <HasRelation name="entry" source="gui.EntryDialog" target="bl.FlightEntry" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <ImplementsRelation name="&lt;&lt;implements&gt;&gt;" source="db.DatabaseManagement" target="bl.DTFPattern"/>
+    <HasRelation name="bl" source="gui.EntryDialog" target="db.DatabaseManagement" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="gui.EntryDialog" target="bl.FlightEntry" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="cbFlightType" source="gui.EntryDialog" target="bl.FlightType" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="entries" source="db.DatabaseManagement" target="bl.FlightEntry" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="ArrayList&lt;FlightEntry&gt;"/>
+    <UseRelation source="bl.FlightEntry" target="bl.FlightType" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <ImplementsRelation name="&lt;&lt;implements&gt;&gt;" source="gui.EntryDialog" target="bl.DTFPattern"/>
+    <ImplementsRelation name="&lt;&lt;implements&gt;&gt;" source="gui.TableRenderer" target="bl.DTFPattern"/>
+    <UseRelation source="db.DatabaseManagement" target="bl.FlightEntry" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="gui.TableModel" target="bl.FlightEntry" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <ImplementsRelation name="&lt;&lt;implements&gt;&gt;" source="gui.EditDialog" target="bl.DTFPattern"/>
+    <HasRelation name="bl" source="gui.MainGUI" target="db.DatabaseManagement" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="entries" source="gui.TableModel" target="bl.FlightEntry" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="ArrayList&lt;FlightEntry&gt;"/>
+    <HasRelation name="model" source="gui.MainGUI" target="gui.TableModel" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="db.DatabaseManagement" target="db.DatabaseManagement" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="type" source="bl.FlightEntry" target="bl.FlightType" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="instance" source="db.DatabaseManagement" target="db.DatabaseManagement" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>

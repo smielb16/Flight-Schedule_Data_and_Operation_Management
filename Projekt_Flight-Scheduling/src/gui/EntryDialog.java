@@ -21,20 +21,34 @@ import javax.swing.JOptionPane;
  */
 public class EntryDialog extends javax.swing.JDialog implements DTFPattern {
 
+    /**
+     * variables
+     */
     boolean success = false;
     FlightEntry entry = null;
     DatabaseManagement bl;
 
+    /**
+     * fills the ComboBox with all FlightType enums
+     */
     public void initCbFlightType() {
         for (FlightType type : FlightType.values()) {
             cbFlightType.addItem(type);
         }
     }
 
+    /**
+     * used for communication between MainGUI and this dialog
+     * @return 
+     */
     public boolean isSuccess() {
         return success;
     }
 
+    /**
+     * returns created instance of FlightEntry
+     * @return 
+     */
     public FlightEntry getEntry() {
         return entry;
     }
@@ -137,7 +151,7 @@ public class EntryDialog extends javax.swing.JDialog implements DTFPattern {
         jLabel7.setText("Flight code");
         jPanel1.add(jLabel7);
 
-        txFlightCode.setText("QFA1");
+        txFlightCode.setText("QFAXX");
         jPanel1.add(txFlightCode);
 
         btOk.setText("Enter");
@@ -177,6 +191,12 @@ public class EntryDialog extends javax.swing.JDialog implements DTFPattern {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * creates FlightEntry-instance from entered data
+     * calls checkDbForEntry() for Exception-handling; Exception-handling
+     * if successful, closes the dialog
+     * @param evt 
+     */
     private void btOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOkActionPerformed
         try {
             String airline = txAirline.getText();
@@ -207,6 +227,10 @@ public class EntryDialog extends javax.swing.JDialog implements DTFPattern {
         }
     }//GEN-LAST:event_btOkActionPerformed
 
+    /**
+     * closes the dialog
+     * @param evt 
+     */
     private void btAbortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAbortActionPerformed
         success = false;
         this.dispose();

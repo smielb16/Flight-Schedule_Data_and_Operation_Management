@@ -6,7 +6,7 @@
 package bl;
 
 /**
- *
+ * DateTimeFormatter-pattern to avoid multiple unnecessary String literals
  * @author elisc
  */
 public interface DTFPattern {

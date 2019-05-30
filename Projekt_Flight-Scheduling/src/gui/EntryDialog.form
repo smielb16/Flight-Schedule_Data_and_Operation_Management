@@ -152,7 +152,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txFlightCode">
           <Properties>
-            <Property name="text" type="java.lang.String" value="QFA1"/>
+            <Property name="text" type="java.lang.String" value="QFAXX"/>
           </Properties>
         </Component>
       </SubComponents>

@@ -17,6 +17,9 @@ import javax.swing.JOptionPane;
  */
 public class EditDialog extends javax.swing.JDialog implements DTFPattern{
 
+    /**
+     * variables
+     */
     private boolean success = false;
     private LocalTime delay;
 
@@ -28,10 +31,18 @@ public class EditDialog extends javax.swing.JDialog implements DTFPattern{
         initComponents();
     }
 
+    /**
+     * returns the LocalTime delay variable
+     * @return 
+     */
     public LocalTime getDelay() {
         return delay;
     }
     
+    /**
+     * used for communication between MainGUI and this dialog
+     * @return 
+     */
     public boolean isSuccess(){
         return success;
     }
@@ -78,11 +89,21 @@ public class EditDialog extends javax.swing.JDialog implements DTFPattern{
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * closes the dialog
+     * @param evt 
+     */
     private void btAbortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAbortActionPerformed
         success = false;
         this.dispose();
     }//GEN-LAST:event_btAbortActionPerformed
 
+    /**
+     * creates LocalTime delay variable from entered delay
+     * Exception-handling if wrong format or incomplete entry
+     * if successful, closes the dialog
+     * @param evt 
+     */
     private void btOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOkActionPerformed
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern(MAINPATTERN);

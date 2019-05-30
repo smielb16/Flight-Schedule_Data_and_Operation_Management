@@ -9,6 +9,9 @@ import bl.DTFPattern;
 import bl.FlightEntry;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -21,6 +24,16 @@ import javax.swing.table.TableCellRenderer;
  */
 public class TableRenderer implements TableCellRenderer, DTFPattern{
 
+    /**
+     * formats the table cell component
+     * @param table
+     * @param value
+     * @param isSelected
+     * @param hasFocus
+     * @param row
+     * @param column
+     * @return label
+     */
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         JLabel label = new JLabel();
@@ -65,7 +78,7 @@ public class TableRenderer implements TableCellRenderer, DTFPattern{
         
         if(isSelected){
             label.setBackground(Color.gray);
-        }
+        }               
         
         return label;
     }

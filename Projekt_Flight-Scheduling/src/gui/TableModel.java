@@ -16,16 +16,23 @@ import javax.swing.table.AbstractTableModel;
  */
 public class TableModel extends AbstractTableModel {
 
-    ArrayList<FlightEntry> entries = new ArrayList<>();
-    
+    /**
+     * variables
+     */
+    ArrayList<FlightEntry> entries = new ArrayList<>();    
     private final String[] COLUMNS = {"Type", "Airport", "Start",
         "Flight", "Delay", "Arrival", "Machine", "Airline", "Code"};
 
+    
     @Override
     public int getRowCount() {
         return entries.size();
     }
     
+    /**
+     * replaces the entries with the parameterized entries
+     * @param entries 
+     */
     public void setEntries(ArrayList<FlightEntry> entries){
         this.entries = entries;
         fireTableDataChanged();
@@ -47,11 +54,21 @@ public class TableModel extends AbstractTableModel {
         return entry;
     }
     
+    /**
+     * adds an entry to the table
+     * @param entry 
+     */
     public void add(FlightEntry entry){
         entries.add(entry);
         fireTableRowsInserted(entries.size()-1, entries.size()-1);
     }
     
+    /**
+     * edits a selected entry in the table to show
+     * the newly entered value for the delay
+     * @param selRow
+     * @param delay 
+     */
     public void edit(int selRow, LocalTime delay){
         FlightEntry entry = entries.get(selRow);
         entries.remove(selRow);
@@ -60,6 +77,23 @@ public class TableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
     
+    /**
+     * removes entries with given indices
+     * @param indices 
+     */
+    public void delete(int[] indices){
+        for(int i = indices.length-1; i >= 0; i--){
+            entries.remove(indices[i]);
+            fireTableRowsDeleted(indices[i], indices[i]);
+        }
+    }
+    
+    /**
+     * returns entry for given index
+     * used by DatabaseManagement
+     * @param selRow
+     * @return 
+     */
     public FlightEntry getEntry(int selRow){
         return entries.get(selRow);
     }

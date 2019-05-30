@@ -6,7 +6,7 @@
 package db;
 
 /**
- *
+ * custom Exception for distinguishability
  * @author elisc
  */
 public class ScheduledFlightException extends Exception{

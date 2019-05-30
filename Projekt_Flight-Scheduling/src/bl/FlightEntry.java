@@ -14,6 +14,9 @@ import java.time.format.DateTimeFormatter;
  */
 public class FlightEntry {
     
+    /**
+     * variables
+     */
     private FlightType type;
     private String airport;
     private LocalTime startTime;
@@ -23,6 +26,16 @@ public class FlightEntry {
     private String flightCode;
     private LocalTime delay;
     
+    /**
+     * Constructor
+     * @param type
+     * @param airport
+     * @param startTime
+     * @param flightTime
+     * @param machineType
+     * @param airline
+     * @param flightCode 
+     */
     public FlightEntry(FlightType type, String airport, LocalTime startTime,
             LocalTime flightTime, String machineType,
             String airline, String flightCode){
@@ -38,6 +51,10 @@ public class FlightEntry {
         
     }
     
+    /**
+     * calculates the aircraft's arrival time
+     * @return 
+     */
     public LocalTime calcArrival(){
         LocalTime arrival = startTime.plusHours(flightTime.getHour());
         arrival = arrival.plusMinutes(flightTime.getMinute());
@@ -47,6 +64,10 @@ public class FlightEntry {
         return arrival;
     }
 
+    /**
+     * Getter methods below
+     * @return 
+     */
     public String getFlightCode() {
         return flightCode;
     }
